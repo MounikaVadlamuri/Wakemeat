@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -15,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class Login extends AppCompatActivity {
 
+    TextView signUpTextView;
     Button loginButton  ;
     EditText emailEditText;
     EditText passwordEditText ;
@@ -28,6 +30,18 @@ public class Login extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        signUpTextView = findViewById(R.id.SignUp);
+
+        signUpTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(Login.this, Signup.class);
+                        startActivity(i);
+                    }
+                }
+        );
 
         loginButton = findViewById(R.id.LoginButton);
         emailEditText = findViewById(R.id.Email);
