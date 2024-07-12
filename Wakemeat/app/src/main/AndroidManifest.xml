@@ -2,12 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/maps_api_key" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,12 +16,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wakemeat"
         tools:targetApi="31">
+
+        <activity
+            android:name=".Signup"
+            android:exported="false"
+            android:label="Signup"
+            android:theme="@style/Base.Theme.LoginScreen"/>
+
         <activity
             android:name=".Login"
             android:exported="true"
             android:label="@string/title_activity_login"
             android:theme="@style/Base.Theme.LoginScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <meta-data
@@ -34,14 +42,8 @@
         <activity
             android:name=".MapsInteraction"
             android:exported="true"
-            android:label="@string/title_activity_maps_interaction">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+            android:label="@string/title_activity_maps_interaction"
+            android:theme="@style/Base.Theme.LoginScreen" />
     </application>
 
 </manifest>
