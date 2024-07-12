@@ -4,10 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/maps_api_key" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -24,6 +21,11 @@
             android:exported="true"
             android:label="@string/title_activity_login"
             android:theme="@style/Base.Theme.LoginScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 
@@ -34,12 +36,8 @@
         <activity
             android:name=".MapsInteraction"
             android:exported="true"
-            android:label="@string/title_activity_maps_interaction">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/title_activity_maps_interaction"
+            android:theme="@style/Base.Theme.LoginScreen">
         </activity>
 
     </application>
