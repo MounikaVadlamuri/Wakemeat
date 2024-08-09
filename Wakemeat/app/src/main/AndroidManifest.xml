@@ -16,13 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wakemeat"
         tools:targetApi="31">
-
+        <activity
+            android:name=".AddAlarm"
+            android:exported="false"
+            android:label="AddAlarm"
+            android:theme="@style/Base.Theme.LoginScreen" />
+        <activity
+            android:name=".Landing"
+            android:exported="false"
+            android:label="Landing"
+            android:theme="@style/Base.Theme.LoginScreen" />
         <activity
             android:name=".Signup"
             android:exported="false"
             android:label="Signup"
-            android:theme="@style/Base.Theme.LoginScreen"/>
-
+            android:theme="@style/Base.Theme.LoginScreen" />
         <activity
             android:name=".Login"
             android:exported="true"

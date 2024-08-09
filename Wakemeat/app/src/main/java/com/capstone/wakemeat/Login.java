@@ -66,8 +66,9 @@ public class Login extends AppCompatActivity {
 
                         if (res.getCount() > 0) {
                             Toast.makeText(Login.this, "Welcome aboard !", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(Login.this,MapsInteraction.class);
+                            Intent i = new Intent(Login.this,Landing.class);
                             startActivity(i);
+                            finish();
                         } else {
                             Toast.makeText(Login.this, "Invalid username or password! Are you sure you have signed up already?", Toast.LENGTH_SHORT).show();
                         }

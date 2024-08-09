@@ -18,6 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /* ALARMS_ALARM */
     public static final String TABLE_NAME_ALARM = "alarms_alarm";
     public static final String TABLE_COLUMN_ALARM_ID = "id";
+    public static final String TABLE_COLUMN_ALARM_NAME = "name";
     public static final String TABLE_COLUMN_ALARM_TIME = "time";
     public static final String TABLE_COLUMN_ALARM_LOCATION_LATITUDE = "location_latitude";
     public static final String TABLE_COLUMN_ALARM_LOCATION_LONGITUDE = "location_longitude";
@@ -30,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE "+ TABLE_NAME_USER + " ("+TABLE_COLUMN_USER_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+TABLE_COLUMN_USER_EMAIL+" TEXT, "+TABLE_COLUMN_USER_PASSWORD+" TEXT)");
-        db.execSQL("CREATE TABLE "+ TABLE_NAME_ALARM + " ("+TABLE_COLUMN_ALARM_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+TABLE_COLUMN_ALARM_TIME+" TEXT, "+TABLE_COLUMN_ALARM_LOCATION_LATITUDE+" DOUBLE, "+TABLE_COLUMN_ALARM_LOCATION_LONGITUDE+" DOUBLE)");
+        db.execSQL("CREATE TABLE "+ TABLE_NAME_ALARM + " ("+TABLE_COLUMN_ALARM_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+TABLE_COLUMN_ALARM_NAME+"TEXT, "+TABLE_COLUMN_ALARM_TIME+" TEXT, "+TABLE_COLUMN_ALARM_LOCATION_LATITUDE+" DOUBLE, "+TABLE_COLUMN_ALARM_LOCATION_LONGITUDE+" DOUBLE)");
     }
 
     @Override

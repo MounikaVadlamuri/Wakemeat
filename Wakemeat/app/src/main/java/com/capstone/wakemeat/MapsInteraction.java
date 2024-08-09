@@ -105,7 +105,11 @@ public class MapsInteraction extends FragmentActivity implements OnMapReadyCallb
                             return;
                         }
                         else{
-                            Toast.makeText(MapsInteraction.this, "You clicked in the button! You location: " + latLng.toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MapsInteraction.this, "Latlong selected: " + latLng.toString(), Toast.LENGTH_SHORT).show();
+                            Intent AddAlarm = new Intent();
+                            AddAlarm.putExtra("activity_result",latLng.toString());
+                            setResult(101, AddAlarm);
+                            finish();
                         }
 
                     }
