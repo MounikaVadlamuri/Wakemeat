@@ -33,6 +33,7 @@ public class AddAlarm extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DbHelper = new DatabaseHelper(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_alarm);
@@ -54,8 +55,7 @@ public class AddAlarm extends AppCompatActivity {
                         if(resultCode==101)
                         {
                             String latLong=data.getStringExtra("activity_result");
-                            Toast.makeText(AddAlarm.this, "Recieved Location: " + latLong, Toast.LENGTH_SHORT).show();
-                            LatlongText.setText(latLong);
+                            LatlongText.setText(latLong.replace("lat/lng: (","").replace(")",""));
                             selectedlatLng = latLong;
                         }
                     }
@@ -80,13 +80,21 @@ public class AddAlarm extends AppCompatActivity {
                         } else if (selectedlatLng == null) {
                             Toast.makeText(AddAlarm.this, "Please select a location using the Select Location Button", Toast.LENGTH_SHORT).show();
                             return;
-                        }
+                        } else {
+                            Double latitude = Double.parseDouble(selectedlatLng.replace("lat/lng: (","").replace(")","").split(",")[0]);
+                            Double longitude = Double.parseDouble(selectedlatLng.replace("lat/lng: (","").replace(")","").split(",")[1]);
 
-                        Toast.makeText(AddAlarm.this, "Alarm Saved!", Toast.LENGTH_SHORT).show();
-                        Intent landing = new Intent();
-                        landing.putExtra("activity_result","Alarm " + alarmName + " saved with success!");
-                        setResult(102, landing);
-                        finish();
+                            boolean isInserted = DbHelper.insertAlarm(alarmName, timeInitial, timeLimit, latitude, longitude);
+
+                            if (isInserted) {
+                                Intent landing = new Intent();
+                                landing.putExtra("activity_result","Alarm registered with success!");
+                                setResult(102, landing);
+                                finish();
+                            } else {
+                                Toast.makeText(AddAlarm.this, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
         );

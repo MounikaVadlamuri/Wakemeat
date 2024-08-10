@@ -18,20 +18,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /* ALARMS_ALARM */
     public static final String TABLE_NAME_ALARM = "alarms_alarm";
     public static final String TABLE_COLUMN_ALARM_ID = "id";
-    public static final String TABLE_COLUMN_ALARM_NAME = "name";
-    public static final String TABLE_COLUMN_ALARM_TIME = "time";
+    public static final String TABLE_COLUMN_ALARM_NAME = "alarm_name";
+    public static final String TABLE_COLUMN_ALARM_INITIAL_TIME = "initial_time";
+    public static final String TABLE_COLUMN_ALARM_LIMIT_TIME = "limit_time";
     public static final String TABLE_COLUMN_ALARM_LOCATION_LATITUDE = "location_latitude";
     public static final String TABLE_COLUMN_ALARM_LOCATION_LONGITUDE = "location_longitude";
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
-        /*SQLiteDatabase db = this.getWritableDatabase();*/
+
+        /* If you have to recreate the database uncomment the following lines:
+        SQLiteDatabase db = this.getWritableDatabase();
+        onUpgrade(db, 0, 1);*/
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE "+ TABLE_NAME_USER + " ("+TABLE_COLUMN_USER_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+TABLE_COLUMN_USER_EMAIL+" TEXT, "+TABLE_COLUMN_USER_PASSWORD+" TEXT)");
-        db.execSQL("CREATE TABLE "+ TABLE_NAME_ALARM + " ("+TABLE_COLUMN_ALARM_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+TABLE_COLUMN_ALARM_NAME+"TEXT, "+TABLE_COLUMN_ALARM_TIME+" TEXT, "+TABLE_COLUMN_ALARM_LOCATION_LATITUDE+" DOUBLE, "+TABLE_COLUMN_ALARM_LOCATION_LONGITUDE+" DOUBLE)");
+        db.execSQL("CREATE TABLE "+ TABLE_NAME_ALARM + " ("+TABLE_COLUMN_ALARM_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+TABLE_COLUMN_ALARM_NAME+" TEXT, "+TABLE_COLUMN_ALARM_INITIAL_TIME+" TEXT, "+TABLE_COLUMN_ALARM_LIMIT_TIME+" TEXT, "+TABLE_COLUMN_ALARM_LOCATION_LATITUDE+" DOUBLE, "+TABLE_COLUMN_ALARM_LOCATION_LONGITUDE+" DOUBLE)");
     }
 
     @Override
@@ -58,13 +63,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean insertAlarm(String time, Double latitude, Double longitude){
+    public boolean insertAlarm(String name,String initial_time, String limit_time, Double latitude, Double longitude){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TABLE_COLUMN_ALARM_TIME, time);
+        contentValues.put(TABLE_COLUMN_ALARM_NAME, name);
+        contentValues.put(TABLE_COLUMN_ALARM_INITIAL_TIME, initial_time);
+        contentValues.put(TABLE_COLUMN_ALARM_LIMIT_TIME, limit_time);
         contentValues.put(TABLE_COLUMN_ALARM_LOCATION_LATITUDE, latitude);
         contentValues.put(TABLE_COLUMN_ALARM_LOCATION_LONGITUDE, longitude);
-        long result = db.insert(TABLE_NAME_ALARM, null, contentValues);
+        long result = db.insert(TABLE_NAME_ALARM, null,  contentValues);
 
         if(result == -1) return false;
         else return true;
