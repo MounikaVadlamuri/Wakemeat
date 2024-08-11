@@ -41,7 +41,7 @@ public class MapsInteraction extends FragmentActivity implements OnMapReadyCallb
 
     Button confirmButton;
 
-    LatLng latLng;
+    LatLng latLng = new LatLng(43.4494652, -80.4864217);
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     private ActivityMapsInteractionBinding binding;

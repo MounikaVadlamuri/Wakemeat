@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ public class Landing extends AppCompatActivity {
     DatabaseHelper dbHelper;
     Button AddAlarmButton;
     TextView DisplayAlarms;
+    EditText IdToDelete;
+    Button DeleteAlarmButton;
     ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
@@ -68,6 +71,28 @@ public class Landing extends AppCompatActivity {
                     }
                 }
         );
+
+        IdToDelete = findViewById(R.id.IdToDelete);
+        DeleteAlarmButton = findViewById(R.id.DeleteAlarmButton);
+        DeleteAlarmButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(IdToDelete.getText().toString().isEmpty()){
+                            Toast.makeText(Landing.this, "Please enter an Alarm Id", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else {
+                            Integer deletedRows = deleteAlarm(Integer.parseInt(IdToDelete.getText().toString()));
+                            if(deletedRows > 0){
+                                Toast.makeText(Landing.this, "Alarm deleted successfully", Toast.LENGTH_SHORT).show();
+                                DisplayAlarms.setText(showAlarms());
+                            } else {
+                                Toast.makeText(Landing.this, "No alarm found with the given Id, please try again", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+        );
     }
 
     public String showAlarms() {
@@ -79,6 +104,7 @@ public class Landing extends AppCompatActivity {
         } else {
             StringBuffer buffer = new StringBuffer();
             while (res.moveToNext()) {
+                buffer.append("Alarm Id: "+res.getString(0)+"\n");
                 buffer.append("Alarm Name: "+res.getString(1)+"\n");
                 buffer.append("Alarm Initial Time: "+res.getString(2)+"\n");
                 buffer.append("Alarm Limit Time: "+res.getString(3)+"\n");
@@ -86,9 +112,12 @@ public class Landing extends AppCompatActivity {
                 buffer.append("Alarm Location Longitude: "+res.getString(5)+"\n");
                 buffer.append("_____________________________________\n");
             }
-
-
             return buffer.toString();
         }
+    }
+
+    public Integer deleteAlarm(Integer alarmId){
+        dbHelper = new DatabaseHelper(this);
+        return dbHelper.deleteAlarmbyId(alarmId);
     }
 }
