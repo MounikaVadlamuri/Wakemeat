@@ -21,4 +21,12 @@
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/material_dynamic_neutral30"
         app:cornerRadius ="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/DisplayAlarms"
+        android:text="Test"
+        android:textSize="15sp"
+        android:textColor="@color/white"/>
 </LinearLayout>

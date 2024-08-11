@@ -73,8 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(TABLE_COLUMN_ALARM_LOCATION_LONGITUDE, longitude);
         long result = db.insert(TABLE_NAME_ALARM, null,  contentValues);
 
-        if(result == -1) return false;
-        else return true;
+        return result != -1;
     }
 
     public Cursor listAlarmbyId(Integer alarmId){
@@ -85,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor listAllAlarms(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM "+ TABLE_NAME_ALARM, null);
+        Cursor res = db.rawQuery("SELECT * FROM "+ TABLE_NAME_ALARM +" ORDER BY "+TABLE_COLUMN_ALARM_ID+" DESC", null);
         return res;
     }
 
