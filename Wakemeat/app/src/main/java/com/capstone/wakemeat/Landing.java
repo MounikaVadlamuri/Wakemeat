@@ -68,16 +68,13 @@ public class Landing extends AppCompatActivity {
                     }
                 }
         );
-
-        //DisplayAlarms.setText(message);
-        //showAlarms();
     }
 
     public String showAlarms() {
         dbHelper = new DatabaseHelper(this);
         Cursor res = dbHelper.listAllAlarms();
         if(res.getCount() == 0){
-             //showMessage("Error","No alarms found, try adding a new one");
+
             return "No alarms found, try adding a new one";
         } else {
             StringBuffer buffer = new StringBuffer();
@@ -90,16 +87,8 @@ public class Landing extends AppCompatActivity {
                 buffer.append("_____________________________________\n");
             }
 
-             //showMessage("data", buffer.toString());
+
             return buffer.toString();
         }
-    }
-
-    public void showMessage(String title, String mesage){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        builder.setMessage(mesage);
-        builder.show();
     }
 }
