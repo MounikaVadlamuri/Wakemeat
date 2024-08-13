@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,8 +26,8 @@ public class AddAlarm extends AppCompatActivity {
     Button SelectLocationButton;
     Button SaveAlarmButton  ;
     EditText AlarmNameEditText ;
-    EditText TimeInitialEditText;
-    EditText TimeLimitEditText;
+    TimePicker TimeInitialEditText;
+    TimePicker TimeLimitEditText;
     String selectedlatLng = null;
     TextView LatlongText;
     ActivityResultLauncher<Intent> activityResultLauncher;
@@ -71,8 +72,8 @@ public class AddAlarm extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         String alarmName = AlarmNameEditText.getText().toString();
-                        String timeInitial = TimeInitialEditText.getText().toString();
-                        String timeLimit = TimeLimitEditText.getText().toString();
+                        String timeInitial = String.valueOf(TimeInitialEditText.getCurrentHour()) + ":" + String.valueOf(TimeInitialEditText.getCurrentMinute());
+                        String timeLimit = String.valueOf(TimeLimitEditText.getCurrentHour()) + ":" + String.valueOf(TimeLimitEditText.getCurrentMinute());
 
                         if (alarmName.isEmpty() || timeInitial.isEmpty()|| timeLimit.isEmpty()) {
                             Toast.makeText(AddAlarm.this, "Please enter both Alarm Name and Time Interval", Toast.LENGTH_SHORT).show();

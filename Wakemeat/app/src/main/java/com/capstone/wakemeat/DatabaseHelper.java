@@ -76,9 +76,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public Cursor listAlarmbyId(Integer alarmId){
+    public Cursor listLastAlarm(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM "+ TABLE_NAME_ALARM+ " WHERE "+TABLE_COLUMN_ALARM_ID+"="+ alarmId, null);
+        Cursor res = db.rawQuery("SELECT "+TABLE_COLUMN_ALARM_INITIAL_TIME+" FROM "+ TABLE_NAME_ALARM+ " WHERE "+TABLE_COLUMN_ALARM_ID+"=(select max(id) from alarms_alarm)", null);
         return res;
     }
 

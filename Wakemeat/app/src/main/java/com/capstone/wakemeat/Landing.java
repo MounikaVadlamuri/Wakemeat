@@ -1,5 +1,7 @@
 package com.capstone.wakemeat;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,11 +16,12 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Calendar;
 
 public class Landing extends AppCompatActivity {
     DatabaseHelper dbHelper;
@@ -26,10 +29,15 @@ public class Landing extends AppCompatActivity {
     TextView DisplayAlarms;
     EditText IdToDelete;
     Button DeleteAlarmButton;
+    Button toggleButton;
+    AlarmManager alarmManager;
+    PendingIntent pendingIntent;
     ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_landing);
@@ -93,6 +101,54 @@ public class Landing extends AppCompatActivity {
                     }
                 }
         );
+
+        toggleButton = findViewById(R.id.toggleButton);
+
+        toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long time;
+                if (toggleButton.isEnabled()) {
+                    Toast.makeText(Landing.this, "ALARM ON", Toast.LENGTH_SHORT).show();
+                    Calendar calendar = Calendar.getInstance();
+
+                    String HourMinute = returnLatestAlarmTime();
+
+                    if(HourMinute.isEmpty()){
+                        return;
+                    }
+
+                    int Hour = Integer.parseInt(HourMinute.split(":")[0]);
+                    int Minute = Integer.parseInt(HourMinute.split(":")[1]);
+
+                    // calendar is called to get current time in hour and minute
+                    calendar.set(Calendar.HOUR_OF_DAY, Hour);
+                    calendar.set(Calendar.MINUTE, Minute);
+
+                    // using intent i have class AlarmReceiver class which inherits
+                    // BroadcastReceiver
+                    Intent intent = new Intent(Landing.this, AlarmReceiver.class);
+
+                    // we call broadcast using pendingIntent
+                    pendingIntent = PendingIntent.getBroadcast(Landing.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+                    time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
+                    if (System.currentTimeMillis() > time) {
+                        // setting time as AM and PM
+                        if (Calendar.AM_PM == 0)
+                            time = time + (1000 * 60 * 60 * 12);
+                        else
+                            time = time + (1000 * 60 * 60 * 24);
+                    }
+                    // Alarm rings continuously until toggle button is turned off
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
+                    // alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (time * 1000), pendingIntent);
+                } else {
+                    alarmManager.cancel(pendingIntent);
+                    Toast.makeText(Landing.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public String showAlarms() {
@@ -120,4 +176,19 @@ public class Landing extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         return dbHelper.deleteAlarmbyId(alarmId);
     }
+
+    public String returnLatestAlarmTime(){
+        dbHelper = new DatabaseHelper(this);
+        Cursor res = dbHelper.listLastAlarm();
+        if(res.getCount() == 0){
+            return null;
+        } else {
+            String hour = "";
+            while (res.moveToNext()) {
+                hour = res.getString(0);
+            }
+            return hour;
+        }
+    }
+
 }
