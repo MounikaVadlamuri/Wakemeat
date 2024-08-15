@@ -5,11 +5,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import android.widget.SearchView;
 
@@ -24,24 +28,31 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.capstone.wakemeat.databinding.ActivityMapsInteractionBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.transition.MaterialElevationScale;
 
 import java.io.IOException;
 import java.util.List;
 
 public class MapsInteraction extends FragmentActivity implements OnMapReadyCallback {
-
+    DatabaseHelper dbHelper;
     private final int FINE_PERMISSION_CODE = 1;
     private GoogleMap mMap;
     private SearchView mapSearchView;
 
+    Button confirmButton;
+
+    LatLng latLng = new LatLng(43.4494652, -80.4864217);
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     private ActivityMapsInteractionBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_interaction);
+
+        confirmButton = findViewById(R.id.ConfirmButton);
 
         mapSearchView = findViewById(R.id.mapSearch);
 
@@ -69,7 +80,7 @@ public class MapsInteraction extends FragmentActivity implements OnMapReadyCallb
 
                     Address address = addressList.get(0);
                     if(address!=null) {
-                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        latLng = new LatLng(address.getLatitude(), address.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
                     }
@@ -85,6 +96,24 @@ public class MapsInteraction extends FragmentActivity implements OnMapReadyCallb
 
         mapFragment.getMapAsync(MapsInteraction.this);
 
+        confirmButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (latLng == null){
+                            Toast.makeText(MapsInteraction.this, "Please select a location on the map", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        else{
+                            Intent AddAlarm = new Intent();
+                            AddAlarm.putExtra("activity_result",latLng.toString());
+                            setResult(101, AddAlarm);
+                            finish();
+                        }
+
+                    }
+                }
+        );
     }
 
     private void getLastLocation() {
@@ -97,8 +126,7 @@ public class MapsInteraction extends FragmentActivity implements OnMapReadyCallb
             @Override
             public void onSuccess(Location location){
                 if (location != null){
-                    currentLocation = location;
-                    LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                    LatLng current = new LatLng(43.4494652, -80.4864217);
                     mMap.addMarker(new MarkerOptions().position(current).title("My Location"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current,10));

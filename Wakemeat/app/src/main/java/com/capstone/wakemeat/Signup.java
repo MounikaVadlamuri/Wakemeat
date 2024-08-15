@@ -14,13 +14,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class Signup extends AppCompatActivity {
-
+    DatabaseHelper dbHelper;
     Button signUpButton  ;
     EditText emailEditText;
     EditText passwordEditText ;
     EditText confirmPasswordEditText ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        dbHelper = new DatabaseHelper(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
@@ -49,9 +50,15 @@ public class Signup extends AppCompatActivity {
                         }
 
                         if (password.equals(confirmPassword)) {
-                            Toast.makeText(Signup.this, "User registered with success!", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(Signup.this,Login.class);
-                            startActivity(i);
+                            boolean isInserted = dbHelper.insertUser(email, password);
+                            if (isInserted) {
+                                Toast.makeText(Signup.this, "User registered with success!", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(Signup.this, Login.class);
+                                startActivity(i);
+                                finish();
+                            } else {
+                                Toast.makeText(Signup.this, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Toast.makeText(Signup.this, "Passwords must be equal, please review the passwords informed", Toast.LENGTH_SHORT).show();
                         }

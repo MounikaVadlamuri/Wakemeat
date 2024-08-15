@@ -1,6 +1,7 @@
 package com.capstone.wakemeat;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class Login extends AppCompatActivity {
+    DatabaseHelper dbHelper;
 
     TextView signUpTextView;
     Button loginButton  ;
@@ -22,6 +24,7 @@ public class Login extends AppCompatActivity {
     EditText passwordEditText ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        dbHelper = new DatabaseHelper(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
@@ -54,20 +57,20 @@ public class Login extends AppCompatActivity {
                         String email = emailEditText.getText().toString();
                         String password = passwordEditText.getText().toString();
 
-                        String expectedEmail = "admin@admin.com";
-                        String expectedPassword = "admin";
-
                         if (email.isEmpty() || password.isEmpty()) {
                             Toast.makeText(Login.this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        if (email.equals(expectedEmail) && password.equals(expectedPassword)) {
-                            Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(Login.this,MapsInteraction.class);
+                        Cursor res = dbHelper.checkLogin(email, password);
+
+                        if (res.getCount() > 0) {
+                            Toast.makeText(Login.this, "Welcome aboard !", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(Login.this,Landing.class);
                             startActivity(i);
+                            finish();
                         } else {
-                            Toast.makeText(Login.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "Invalid username or password! Are you sure you have signed up already?", Toast.LENGTH_SHORT).show();
                         }
 
                     }
