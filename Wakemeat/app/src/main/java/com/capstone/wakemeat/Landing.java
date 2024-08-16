@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -104,51 +105,54 @@ public class Landing extends AppCompatActivity {
 
         toggleButton = findViewById(R.id.toggleButton);
 
-        toggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long time;
-                if (toggleButton.isEnabled()) {
-                    Toast.makeText(Landing.this, "ALARM ON", Toast.LENGTH_SHORT).show();
-                    Calendar calendar = Calendar.getInstance();
+    }
 
-                    String HourMinute = returnLatestAlarmTime();
+    public void OnToggleClicked(View v) {
+        long time;
+        if (((ToggleButton) v).isChecked()) {
+            Toast.makeText(Landing.this, "ALARM ON", Toast.LENGTH_SHORT).show();
+            Calendar calendar = Calendar.getInstance();
 
-                    if(HourMinute.isEmpty()){
-                        return;
-                    }
+            String HourMinute = returnLatestAlarmTime();
 
-                    int Hour = Integer.parseInt(HourMinute.split(":")[0]);
-                    int Minute = Integer.parseInt(HourMinute.split(":")[1]);
-
-                    // calendar is called to get current time in hour and minute
-                    calendar.set(Calendar.HOUR_OF_DAY, Hour);
-                    calendar.set(Calendar.MINUTE, Minute);
-
-                    // using intent i have class AlarmReceiver class which inherits
-                    // BroadcastReceiver
-                    Intent intent = new Intent(Landing.this, AlarmReceiver.class);
-
-                    // we call broadcast using pendingIntent
-                    pendingIntent = PendingIntent.getBroadcast(Landing.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-                    time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
-                    if (System.currentTimeMillis() > time) {
-                        // setting time as AM and PM
-                        if (Calendar.AM_PM == 0)
-                            time = time + (1000 * 60 * 60 * 12);
-                        else
-                            time = time + (1000 * 60 * 60 * 24);
-                    }
-                    // Alarm rings continuously until toggle button is turned off
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
-                    // alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (time * 1000), pendingIntent);
-                } else {
-                    alarmManager.cancel(pendingIntent);
-                    Toast.makeText(Landing.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
-                }
+            if(HourMinute.isEmpty()){
+                return;
             }
-        });
+
+            int Hour = Integer.parseInt(HourMinute.split(":")[0]);
+            int Minute = Integer.parseInt(HourMinute.split(":")[1]);
+
+            // calendar is called to get current time in hour and minute
+            calendar.set(Calendar.HOUR_OF_DAY, Hour);
+            calendar.set(Calendar.MINUTE, Minute);
+
+            // using intent i have class AlarmReceiver class which inherits
+            // BroadcastReceiver
+            Intent intent = new Intent(Landing.this, AlarmReceiver.class);
+
+            // we call broadcast using pendingIntent
+            pendingIntent = PendingIntent.getBroadcast(Landing.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
+
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, time, alarmManager.INTERVAL_DAY, pendingIntent);
+
+            if (System.currentTimeMillis() > time) {
+
+                // setting time as AM and PM
+                if (Calendar.AM_PM == 0)
+                    time = time + (1000 * 60 * 60 * 12);
+                else
+                    time = time + (1000 * 60 * 60 * 24);
+            }
+            // Alarm rings continuously until toggle button is turned off
+            //alarmManager.setA(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
+            //Toast.makeText(Landing.this, "time=" + time, Toast.LENGTH_SHORT).show();
+            //alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (time * 1000), pendingIntent);
+        } else {
+            alarmManager.cancel(pendingIntent);
+            Toast.makeText(Landing.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public String showAlarms() {

@@ -72,8 +72,37 @@ public class AddAlarm extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         String alarmName = AlarmNameEditText.getText().toString();
-                        String timeInitial = String.valueOf(TimeInitialEditText.getCurrentHour()) + ":" + String.valueOf(TimeInitialEditText.getCurrentMinute());
-                        String timeLimit = String.valueOf(TimeLimitEditText.getCurrentHour()) + ":" + String.valueOf(TimeLimitEditText.getCurrentMinute());
+                        String initialHourResult;
+                        String initialMinuteResult;
+                        String limitHourResult;
+                        String limitMinuteResult;
+                        int initialHour = TimeInitialEditText.getHour();
+                        int initialMinute = TimeInitialEditText.getMinute();
+                        int limitHour = TimeLimitEditText.getHour();
+                        int limitMinute = TimeLimitEditText.getMinute();
+
+                        if (initialHour < 10)
+                            initialHourResult = String.valueOf("0" + initialHour);
+                        else
+                            initialHourResult = String.valueOf(initialHour);
+
+                        if (initialMinute < 10)
+                            initialMinuteResult = String.valueOf("0" + initialMinute);
+                        else
+                            initialMinuteResult = String.valueOf(initialMinute);
+
+                        if (limitHour < 10)
+                            limitHourResult = String.valueOf("0" + limitHour);
+                        else
+                            limitHourResult = String.valueOf(limitHour);
+
+                        if (limitMinute < 10)
+                            limitMinuteResult = String.valueOf("0" + limitMinute);
+                        else
+                            limitMinuteResult = String.valueOf(limitMinute);
+
+                        String timeInitial = initialHourResult + ":" + initialMinuteResult;
+                        String timeLimit = limitHourResult + ":" + limitMinuteResult;
 
                         if (alarmName.isEmpty() || timeInitial.isEmpty()|| timeLimit.isEmpty()) {
                             Toast.makeText(AddAlarm.this, "Please enter both Alarm Name and Time Interval", Toast.LENGTH_SHORT).show();

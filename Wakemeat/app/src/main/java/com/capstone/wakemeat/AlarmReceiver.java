@@ -13,11 +13,11 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     // implement onReceive() method
     public void onReceive(Context context, Intent intent) {
-
         // we will use vibrator first
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(4000);
